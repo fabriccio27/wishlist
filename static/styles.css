@@ -1,13 +1,12 @@
-body{
+body, html {
     margin:0;
-    height:100vh;
+    height:100%;
 }
 #page-container {
     background-color:rgb(23, 23, 102);
     color:rgb(135, 180, 222);
     font-family:tahoma, arial;
-    margin:0;
-    min-height: 100vh;
+    min-height: 100%;
     position:relative;
 }
 #footer {
@@ -23,3 +22,69 @@ body{
     flex-direction:row;
     justify-content: center;
 }
+.flash-message {
+    background-color:limegreen;
+    color:black;
+    border:2px solid green;
+    border-radius:3px;
+    width:20vw;
+}
+.inputfield {
+    border-radius: 3px;
+    border:2px solid lightskyblue;
+}
+.options-main {
+    display:flex;
+    flex-direction:row;
+    justify-content: center;
+}
+.cards-container {
+    display:flex;
+    flex-direction:row;
+    justify-content:space-evenly;
+    flex-wrap:wrap;
+}
+.card {
+    position:relative;
+    width:18vw;
+    height:25vh;
+    border:2px solid blueviolet;
+    text-align:center;
+}
+.card-btn {
+    width:100%;
+    background-color: brown;
+    border:none;
+    color:cornsilk;
+    display:inline-block;
+    font-size:large;
+    margin-bottom:0;
+}
+.card-title {
+    min-height:30%;
+    background-color: crimson;
+    color:white;
+    font-family:tahoma;
+    font-weight: bolder;
+    margin:0;
+    padding:10px 0;
+}
+.explore-users {
+    background-color:honeydew;
+    color:hotpink;
+}
+.hidden-form {
+    background-color:wheat;
+}
+@media (max-width:480px){
+    .cards-container {
+      display:flex;
+      flex-direction:column;
+      align-content:space-evenly;
+    }
+
+    .card {
+        position:relative;
+        width:70vw;
+    }
+  }

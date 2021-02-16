@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block main %}
+<h2>my wishes</h2>
+{% if user.products|length>0 %}
+  <div class="cards-container">
+      {% for card in user.products %}
+      <div class="card">
+        <h3 class="card-title">{{card.name}}</h3>
+        <p>fillerfillerfillerfiller</p>
+        <!-- tengo que poner un boton que de el alta de los que ya tengo o no me interesan, y mandarlos a otra tabla-->
+        <button onclick="actionConfirm(this.id)" class="card-btn" type="button" id="btn-{{card.id}}">Check out</button>
+        <div id ="form-for-{{card.id}}" class="hidden-form">
+            <form action="{{url_for('my_wishes')}}" method="POST">
+                <input id="fulfilled" type="radio" name="checkout" value="complete">
+                <label for="fulfilled">Granted</label><br>
+                <input id="notwanted" type="radio" name="checkout" value="discard">
+                <label for="notwanted">Not Wanted</label><br>
+                <input type="text" name="card_id" value="{{card.id}}" hidden>
+                <input type="submit" value="Confirm" class="check-btn">
+                
+                <!-- tengo que mandar el id del producto que quiero hacer checkout -->
+            </form>
+        </div>
+      </div>
+
+      {% endfor %}
+  </div>
+{% else %}
+<p>No wishes here [:1]</p>
+{% endif %}
+<script>
+    var forms = document.getElementsByClassName('hidden-form');
+    for (let i=0; i<forms.length; i++){
+        forms[i].style.display='none';
+    }
+
+    function actionConfirm(clickedid){
+        var sib = document.getElementById(clickedid).nextElementSibling;
+        
+        if (document.getElementById(sib.id).style.display=="none"){
+            document.getElementById(sib.id).style.display="block";
+        }else{
+            document.getElementById(sib.id).style.display="none";
+        }
+    }
+
+</script>
+
+{% endblock %}

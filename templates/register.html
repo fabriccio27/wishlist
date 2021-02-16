@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block main %}
+<h2>Register</h2>
+<div>
+    <form action="/register" method="POST">
+        <div>
+            <label for="username"></label>
+            <input  id="username" type="text" name="username" placeholder="username" class="inputfield">
+        </div>
+        <div>
+            <label for="ps"></label>
+            <input  id="ps" type="password" name="password" placeholder="password" class="inputfield">
+        </div>
+        <div>
+            <label for="psc"></label>
+            <input  id="psc" type="password" name="confirmation" placeholder="repeat password" class="inputfield">
+        </div>
+        <div>
+            <label for="mail"></label>
+            <input  id="mail" type="email" name="email" placeholder="enter your email" class="inputfield">
+        </div>
+        <div class="btn-div">
+            <input type="submit" value="Submit" class="submit-btn">
+        </div>
+    </form>
+</div>
+
+{% endblock %}

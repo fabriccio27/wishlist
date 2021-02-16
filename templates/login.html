@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block main %}
+<h2>Log In</h2>
+<div>
+    <form action="/login" method="POST">
+        <div>
+            <label for="username"></label>
+            <input  id="username" type="text" name="username" placeholder="username" class="inputfield">
+        </div>
+        <div>
+            <label for="ps"></label>
+            <input  id="ps" type="password" name="password" placeholder="password" class="inputfield">
+        </div>
+        
+        <div class="btn-div">
+            <input type="submit" value="Log In" class="submit-btn">
+        </div>
+    </form>
+    <p>not a user yet? <a href="{{url_for('register')}}">Register here</a></p>
+</div>
+
+{% endblock %}

@@ -1,0 +1,7 @@
+<form action="{{url_for('my_wishes')}}" method="POST">
+    <input id="fulfilled" type="radio" name="checkout" value="fulfilled">
+    <label for="fulfilled">Granted</label><br>
+    <input id="notwanted" type="radio" name="checkout" value="notwanted">
+    <label for="notwanted">Not Wanted</label><br>
+    <input type="submit" value="Confirm">
+</form>

@@ -1,5 +1,33 @@
 {% extends "base.html" %}
 
 {% block main %}
-<h2>You got to the index</h2>
+<h2>Hey there again</h2>
+<div class="main-frame">
+    <div class="myitems-div">
+        {% if cards|length > 0 %}
+            <div class="cards-container">
+                {% for card in cards %}
+                <div class="card">
+                    <h3 class="card-title">{{card.name}}</h3>
+                    <p>fillerfillerfillerfiller</p>
+                    <button onclick="window.open('{{card.link}}','_blank');" class="card-btn" type="button">Grant</button>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="options-main">
+                <p><a href="{{url_for('add_product')}}">Add wishes</a></p>
+                <p><a href="{{url_for('my_wishes')}}">See all wishes</a></p>
+            </div>
+        {% else %}
+            <p>You don't have any listed wish yet. <a href="{{url_for('add_product')}}">Add some</a></p>
+        {% endif %}
+    </div>
+    <div class="explore-users">
+        {% for user in users %}
+        <a href="{{url_for('view_user',id=user.id)}}">{{user.username}}</a>
+        {% endfor %}
+    </div>
+</div>
+
+<!--  aca voy a ver mis objetos deseados y mas abajo una lista de 10 a 20 usuarios aleatorios-->
 {% endblock %}
