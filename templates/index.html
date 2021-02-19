@@ -9,7 +9,7 @@
                 {% for card in cards %}
                 <div class="card">
                     <h3 class="card-title">{{card.name}}</h3>
-                    <p>fillerfillerfillerfiller</p>
+                    <p>Created on {{card.created|datetimeformat}}</p>
                     <button onclick="window.open('{{card.link}}','_blank');" class="card-btn" type="button">Grant</button>
                 </div>
                 {% endfor %}
@@ -23,6 +23,8 @@
         {% endif %}
     </div>
     <div class="explore-users">
+        <h3>Active users</h3>
+
         {% for user in users %}
         <a href="{{url_for('view_user',id=user.id)}}">{{user.username}}</a>
         {% endfor %}

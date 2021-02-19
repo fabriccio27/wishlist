@@ -5,15 +5,15 @@
 <!-- maybe in the future add up for the money or something like that-->
 <div>
     <form action="{{url_for('add_product')}}" method="POST">
-        <div>
+        <div class="duo">
             <label for="url"></label>
             <input  id="url" type="text" name="product_url" placeholder="Paste the link" class="inputfield">
         </div>
-        <div>
+        <div class="duo">
             <label for="title"></label>
             <input  id="title" type="text" name="title" placeholder="Title or Description" class="inputfield" required>
         </div>
-        <div>
+        <div class="duo">
             <label for="store-dd"></label>
             <select id="store-dd" name="store" class="inputfield" required>
                 <option selected>Select store</option>
@@ -23,12 +23,12 @@
                 <option value="other">Other</option>    
             </select>
         </div>
-        <div>
+        <div class="duo">
             <label for="optional"></label>
             <input  id="optional" type="text" name="optional" placeholder="Complementary info" class="inputfield">
         </div>
         <div class="btn-div">
-            <input type="submit" value="Add">
+            <input type="submit" value="Add" class="submit-classic">
         </div>
     </form>
 </div>

@@ -4,10 +4,12 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_session import Session 
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.utils import secure_filename
 
 from helpers import login_required, apology, url_checker
 import random
 import requests
+import os
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -15,6 +17,14 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///pwl.db'
 db = SQLAlchemy(app)
 
+# Set folder for uploads
+UPLOAD_FOLDER='static/images'
+ALLOWED_EXTENSIONS = {'jpeg','jpg','png'}
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER 
+
+@app.template_filter()
+def datetimeformat(date, format='%d-%m-%Y'):
+    return date.strftime(format)
 # Ensure responses aren't cached
 @app.after_request
 def after_request(response):
@@ -44,6 +54,8 @@ class Product(db.Model):
     store = db.Column(db.String(5), nullable=False) # puede ser nullable esto?
     additional = db.Column(db.String(140))
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    created =  db.Column(db.DateTime, default=datetime.now)
+    
 
 class Checked(db.Model):
     checked_id = db.Column(db.Integer, primary_key=True)
@@ -59,6 +71,11 @@ class Candidate(db.Model):
     candidate_id = db.Column(db.Integer, nullable=False)
     proposal_date = db.Column(db.DateTime, default=datetime.now)
 
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+           #string.rsplit(delimiter,maxsplit) maxsplit is how many times it will separate
 
 @app.route("/")
 @login_required
@@ -149,30 +166,75 @@ def add_product():
     else:
         return render_template("add.html")
 
+@app.route("/settings", methods = ["GET", "POST"])
+@login_required
+def settings():
+    if request.method=="POST":
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit an empty part without filename
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            #cambiar el nombre del archivo subido asi despues lo puedo recuperar segun id
+            extension = filename.rsplit('.',1)[1]
+            name = str(session['user_id'])
+            newfilename =  name + '.' + extension
+            print(f"newfilename is {newfilename}")
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], newfilename))
+
+            flash("File uploaded successfully!")
+            return redirect(url_for('index'))
+    else:
+        user = User.query.filter_by(id=session["user_id"]).first()
+        return render_template("settings.html", user=user)
+
 @app.route("/user/<int:id>/wishes", methods = ["GET", "POST"])
 def view_user(id):
     
     if request.method == "POST":
         visitor = session["user_id"]
         card_id = request.form.get("card_id")
-        
+        print(f"This is the id of the present you postulated to: {card_id}")
         candidate = Candidate(
             product_id = card_id,
             candidate_id = visitor
         )
-        #tengo que dejar registrado que un usuario se anoto para un regalo
         db.session.add(candidate)
         db.session.commit()
-        flash("You've postulated to this wish")
+        flash(f"You've postulated to the wish #{card_id}")
         
-        return "working on post branch"
+        return redirect("/")
     else:
         visited_user = User.query.get_or_404(id)
-        #tengo que hacer query de candidatos de cada card
-        print(f"Name of visited user {visited_user.username}")
-        return render_template("viewuser.html", user=visited_user)
+        #usar pillow o algo y recuperar la imagen, un tamaño de 180 x 180 estaria bien
+        print(f"Name of visited user: {visited_user.username}.\n * Visited_user products:\n{visited_user.products}")
+
+        vu_cards = visited_user.products # does not filter checked-out products
+        #if id matches product_if from any register in checked, it must no be available to show
+        is_available = []
+        for prod in vu_cards:
+            checked = Checked.query.filter_by(product_id = prod.id).first()
+            if checked==None:
+                is_available.append(prod)
+
+        cards_dict = {}
+        #for each card count how many registers are related in table candidate
+        for card in is_available:
+            count = len(Candidate.query.filter_by(product_id=card.id).all())
+            dk = str(card.id)
+            cards_dict[dk] = count
+    
+        return render_template("viewuser.html", user=visited_user, counter=cards_dict, available=is_available)
+
 
 @app.route("/mywishes", methods = ["GET", "POST"])
+@login_required
 def my_wishes():
 
     if request.method=="POST":
@@ -182,8 +244,7 @@ def my_wishes():
         print(f"State is: {state}")
         print(f"Target ID is: {target}")
         # assume state is 'complete'
-        completed = 1
-        discarded = 0
+        
         receiver = session["user_id"]
 
         #if state is discard I don't need further information. Create data in checked, delete in product and redirect
@@ -200,20 +261,56 @@ def my_wishes():
             )
             db.session.add(checked)
             # para borrar el elemento de Product, tengo que hacer query, db.session.delete y luego el commit
-            to_delete = Product.query.filter_by(id=target).first()
-            db.session.delete(to_delete)
+            #to_delete = Product.query.filter_by(id=target).first()
+            #db.session.delete(to_delete)
             db.session.commit()
             flash(f"You've discarded successfully item #{target}")
             return redirect("/")
         
         # if state is completed I need info about who completed the task
-        return "working on post branch"
+        '''with target retrieve candidates from candidate table run another view function with info
+         gathered from here'''
+        info = {
+            'target': target,
+            'receiver':receiver
+        }
+        return select_candidate(info)
 
     else:
         myself = User.query.get_or_404(session["user_id"])
         return render_template('mywishes.html', user=myself)
+
+@app.route("/finished", methods=["POST"])
+@login_required
+def finished():
+    #finish writing to checkout table
     
-    
+    receptor = request.form.get("receptor")
+    giver = request.form.get("candidate")
+    target = request.form.get("target")
+    checked = Checked(
+        completed=1,
+        discarded=0,
+        taker_id=receptor,
+        giver_id=giver,
+        product_id=target
+    )
+    db.session.add(checked)
+    db.session.commit()
+    return render_template("finished.html")
+
+def select_candidate(data):
+    #query from candidates
+    print(f"Estoy llegando via {request.method}")
+    print(f"Id del receiver {data['receiver']}")
+    posibles = Candidate.query.filter_by(product_id=data["target"]).all()
+    #[<Candidate 1>] devuelve registros de candidatos, y ahi no tengo usernames
+    users = []
+    for cand in posibles:
+        #query and append to list of users
+        users.append(User.query.filter_by(id=cand.candidate_id).first())
+    return render_template('selected.html', users=users, receiver=data["receiver"], target=data["target"])
+
 
 '''funciones para generar data'''
 from faker import Faker

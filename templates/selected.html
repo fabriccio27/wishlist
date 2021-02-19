@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div>
+    <h2>User who fulfilled your wish</h2>
+    <form action="{{url_for('finished')}}" method="POST">
+        <!-- display dropdown or radio buttons-->
+        {% for user in users %}
+        <input type="radio" name="candidate" value="{{user.id}}" id="{{user.username}}">
+        <label for="{{user.username}}">{{user.username}}</label><br>
+        {% endfor %}
+        <input type="text" name="receptor" value="{{receiver}}" hidden>
+        <input type="text" name="target" value="{{target}}" hidden>
+        <input type="submit" value="Finish" class="submit-btn">
+    </form>
+</div>
+{% endblock %}

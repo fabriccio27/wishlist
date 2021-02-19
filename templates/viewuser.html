@@ -1,24 +1,38 @@
 {% extends 'base.html' %}
 {% block main %}
+<!-- poner barra lateral o seccion superior. Recuperar foto e info provista por el usuario-->
+<div class="feature">
+  <div class="feature-img">
+    <img src="/static/images/{{user.id}}.jpg" alt="your handsome/gorgeous face winning at things" class="profile-pic">
+  </div>
+  <div class="feature-text">
+    <ul>
+      <li>{{user.username}} is active since {{user.active|datetimeformat}}</li>
+      <li>get in touch through {{user.email}}</li>
+    </ul>
+  </div>
+</div>
+
 <h2>wishes by {{user.username}}</h2>
 {% if user.products|length>0 %}
   <div class="cards-container">
       {% for card in user.products %}
-      <div class="card">
+      {% if card in available %}
+      <div class="visited-card">
         <h3 class="card-title">{{card.name}}</h3>
-        <p>fillerfillerfillerfiller</p>
-        <!-- tengo que avisar si alguien ya se anotó en una carta en particular-->
-        <button onclick="window.open('{{card.link}}','_blank');" class="card-btn" type="button">View</button>
-        <form action="{{url_for('view_user', id=user.id)}}">
+        <p>Created: {{card.created|datetimeformat}}</p>
+        <div class="card-info-div">
+          <div class="count-div">{{counter[(card.id)|string]}}</div>
+          <button onclick="window.open('{{card.link}}','_blank');" class="view-btn" type="button">View</button>
+        </div>
+        <form action="{{url_for('view_user', id=user.id)}}" method="POST">
           <input type="text" name="card_id" value="{{card.id}}"hidden>
-          <button>Man up</button>
+          <input type="submit" value="Say Present" class="card-submit-btn">
         </form>
       </div>
-
+      {% endif %}
       {% endfor %}
-
   </div>
-
 
 {% else %}
 <p>No wishes here [:1]</p>

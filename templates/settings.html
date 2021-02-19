@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<h2 style="color:floralwhite">Settings</h2>
+<p>Username: {{user.username}}</p>
+<p>Email: {{user.email}}</p>
+<div>
+    <form action="{{url_for('settings')}}" method="POST" enctype="multipart/form-data">
+        <label for="profile">Upload a profile picture: </label>
+        <input id="profile" type="file" name="file"><br>
+        <input type="submit" value="Upload" class="submit-classic">
+    </form>
+</div>
+<div>
+    <form action="#" method="POST" enctype="multipart/form-data">
+        <label for="social">Add social media </label>
+        <input id="social" type="text" name="social" placeholder="twitter, instagram, onlyfans"><br>
+        <input type="submit" value="Add" class="submit-classic">
+    </form>
+</div>
+
+{% endblock %}

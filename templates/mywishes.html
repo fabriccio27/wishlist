@@ -6,7 +6,7 @@
       {% for card in user.products %}
       <div class="card">
         <h3 class="card-title">{{card.name}}</h3>
-        <p>fillerfillerfillerfiller</p>
+        <p>Created: {{card.created|datetimeformat}}</p>
         <!-- tengo que poner un boton que de el alta de los que ya tengo o no me interesan, y mandarlos a otra tabla-->
         <button onclick="actionConfirm(this.id)" class="card-btn" type="button" id="btn-{{card.id}}">Check out</button>
         <div id ="form-for-{{card.id}}" class="hidden-form">
@@ -16,7 +16,7 @@
                 <input id="notwanted" type="radio" name="checkout" value="discard">
                 <label for="notwanted">Not Wanted</label><br>
                 <input type="text" name="card_id" value="{{card.id}}" hidden>
-                <input type="submit" value="Confirm" class="check-btn">
+                <input type="submit" value="CONFIRM" class="check-btn">
                 
                 <!-- tengo que mandar el id del producto que quiero hacer checkout -->
             </form>

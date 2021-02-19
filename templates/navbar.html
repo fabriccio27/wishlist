@@ -1,9 +1,9 @@
 <header id="header">
-    <img src="/static/images/logo_2.png" alt="logo" id="logo-img">
+    <img src="/static/images/ws.png" alt="logo" id="logo-img">
     <nav id="navbar">
       <ul>
           <li><a href="/">Home</a></li>
-          <li><a href="#">Your Profile</a></li>
+          <li><a href="{{url_for('settings')}}">Your Settings</a></li>
           <!-- la gracia de url_for es que apunta a una view function
           si acá y en varias otras paginas pusiera una ruta hardcodeada, y despues en la view cambio la ruta
           tengo que cambiar en cada una de las paginas 

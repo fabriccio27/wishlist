@@ -8,7 +8,6 @@
     <body>
         <div id="page-container">
             {% include "navbar.html" %}
-
             <div id="content-wrap">
                 <div>
                     {% with messages = get_flashed_messages() %}
@@ -22,13 +21,12 @@
                       {% endif%}
           
                     {% endwith %}
-                </div>
-                
+                </div>                
                 {% block main %}
                 {% endblock %}
             </div>
             <footer id="footer">
-                <ul>
+                <ul id="bottom-bar">
                     <li><a href="https://www.twitter.com/caradeculpable">twitter</a></li>
                     <li><a href="https://www.linkedin.com/in/fabricio-saavedra-n1271991/">linkedin</a></li>
                 </ul>
