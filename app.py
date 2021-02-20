@@ -5,6 +5,7 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
+from flask_mail import Mail, Message
 
 from helpers import login_required, apology, url_checker
 import random
@@ -21,7 +22,7 @@ db = SQLAlchemy(app)
 UPLOAD_FOLDER='static/images'
 ALLOWED_EXTENSIONS = {'jpeg','jpg','png'}
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER 
-
+# Custom filter for dates from db
 @app.template_filter()
 def datetimeformat(date, format='%d-%m-%Y'):
     return date.strftime(format)
@@ -37,7 +38,16 @@ app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
+# Configure app for mail
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'wishlist.app.arg@gmail.com'
+app.config['MAIL_PASSWORD'] = 'wuofhjdgxtqwharb'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail =  Mail(app)
 
+'''Models for tables in db '''
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -76,6 +86,8 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
            #string.rsplit(delimiter,maxsplit) maxsplit is how many times it will separate
+
+'''ROUTES'''
 
 @app.route("/")
 @login_required
@@ -207,6 +219,18 @@ def view_user(id):
         )
         db.session.add(candidate)
         db.session.commit()
+
+        visitor_info =  User.query.filter_by(id=visitor).first()
+        receptor_info = User.query.filter_by(id=id).first()
+
+        print(receptor_info.email)
+
+        bodymsg = f"You have a candidate for one of your wishes, {visitor_info.username}! \nYou can reach out at {visitor_info.email}. \nwishlist team"
+        msg = Message("News for you!",
+            sender='wishlist.app.arg@gmail.com',
+            recipients=[f"{receptor_info.email}"])
+        msg.body = bodymsg
+        mail.send(msg)
         flash(f"You've postulated to the wish #{card_id}")
         
         return redirect("/")

@@ -132,8 +132,12 @@ body, html {
     width: 25%;
     height:38px;
     display:inline-block;
-    background-color:white;
-    line-height:33px;
+    /*background-color:white;*/
+    line-height:45px;
+    color:white;
+    font-weight: bold;
+    background-image:url("../static/images/manocasera.png");
+    background-size:cover;
 }
 .view-btn {
     display:inline;
