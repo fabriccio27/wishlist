@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block main %}
-<h2>Hey there again</h2>
+<h2 style="text-align: center;">Hey there again</h2>
 <div class="main-frame">
     <div class="myitems-div">
         {% if cards|length > 0 %}
@@ -10,7 +10,7 @@
                 <div class="card">
                     <h3 class="card-title">{{card.name}}</h3>
                     <p>Created on {{card.created|datetimeformat}}</p>
-                    <button onclick="window.open('{{card.link}}','_blank');" class="card-btn" type="button">Grant</button>
+                    <button onclick="window.open('{{card.link}}','_blank');" class="card-btn" type="button">View</button>
                 </div>
                 {% endfor %}
             </div>

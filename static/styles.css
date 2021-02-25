@@ -32,7 +32,12 @@ body, html {
 #navbar li a:visited {
     color: hotpink;
 }
-
+.under-login-form a:visited {
+    color:mediumspringgreen;
+}
+.under-login-form a:link {
+    color:hotpink;
+}
 #page-container {
     background-color:rgb(34, 34, 80);
     color:rgb(135, 180, 222);
@@ -45,6 +50,7 @@ body, html {
     margin:0 auto;
     width:70%;
     padding-bottom:5rem;
+    /*text-align:center;*/
 }
 .duo {
     margin: 1rem 0;

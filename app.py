@@ -55,7 +55,9 @@ class User(db.Model):
     password = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(40), nullable=False)
     active = db.Column(db.DateTime, default=datetime.now)
+    social = db.Column(db.Text)
     products = db.relationship("Product", backref="user")
+    
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -205,6 +207,18 @@ def settings():
     else:
         user = User.query.filter_by(id=session["user_id"]).first()
         return render_template("settings.html", user=user)
+
+@app.route("/updatesocialmedia", methods=["POST"])
+@login_required
+def update_social_media():
+    if not request.form.get("social"):
+        return apology("You didn't fill the field. Please do.")
+    socialmedia=request.form.get("social")
+    user = User.query.filter_by(id=session["user_id"]).first()
+    user.social = socialmedia
+    db.session.commit()
+    flash("You updated your social media information")
+    return redirect("/")
 
 @app.route("/user/<int:id>/wishes", methods = ["GET", "POST"])
 def view_user(id):

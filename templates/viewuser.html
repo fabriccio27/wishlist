@@ -8,12 +8,16 @@
   <div class="feature-text">
     <ul>
       <li>{{user.username}} is active since {{user.active|datetimeformat}}</li>
-      <li>get in touch through {{user.email}}</li>
+      {% if user.social %}
+      <li>get in touch through {{user.social}}</li>
+      {% else %}
+      <li>hasn't add social media info</li>
+      {% endif %}
     </ul>
   </div>
 </div>
 
-<h2>wishes by {{user.username}}</h2>
+<h2 style="text-align:center;">wishes by {{user.username}}</h2>
 {% if user.products|length>0 %}
   <div class="cards-container">
       {% for card in user.products %}
