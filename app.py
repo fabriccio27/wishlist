@@ -35,7 +35,7 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 # Configure session to use filesystem (instead of signed cookies)
-#app.config["SESSION_FILE_DIR"] = mkdtemp()
+#app.config["SESSION_FILE_DIR"] = mkdtemp() removing this fix the sessions not persisting
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
@@ -317,6 +317,7 @@ def my_wishes():
 
     else:
         myself = User.query.get_or_404(session["user_id"])
+        #should add something to not show completed wishes or specify state
         return render_template('mywishes.html', user=myself)
 
 @app.route("/finished", methods=["POST"])

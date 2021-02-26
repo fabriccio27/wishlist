@@ -1,14 +1,14 @@
 <header id="header">
     <img src="/static/images/ws.png" alt="logo" id="logo-img">
-    <nav id="navbar">
-      <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="{{url_for('settings')}}">Your Settings</a></li>
+    <nav id="navbar" class="navbar">
+      <a href="/">Home</a></li>
+      <a href="{{url_for('settings')}}">Your Settings</a>
           <!-- la gracia de url_for es que apunta a una view function
           si acá y en varias otras paginas pusiera una ruta hardcodeada, y despues en la view cambio la ruta
           tengo que cambiar en cada una de las paginas 
           url_for('contact')-->
-          <li><a href="/logout">Log Out</a></li>
+      <a href="/logout">Log Out</a>
+      <a href="javascript:void(0);" class="icon" onclick="displayMenu()"><i class="fa fa-bars"></i></a>
       </ul>
     </nav>
-  </header>
+</header>

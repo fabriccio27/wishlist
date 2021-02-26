@@ -7,7 +7,7 @@ body, html {
     background-color:darkorchid;
     position:fixed;
     top:0;
-    height:7vh;
+    height:50px;
     min-width:100%;
     text-align: right;
 }
@@ -18,18 +18,24 @@ body, html {
     width:45px;
     border-radius:40px;
 }
-#navbar {
+.navbar {
     display:inline-block;
     color:cornsilk;
+    overflow:hidden;
 }
-#navbar li {
-    display: inline-block;
+.navbar .icon {
+    display:none;
+}
+.navbar a {
+    float:left;
+    display: block;
     margin: 0 1rem;
+    padding:14px 5px;
 }
-#navbar li a:link {
+.navbar a:link {
     color:white;
 }
-#navbar li a:visited {
+.navbar a:visited {
     color: hotpink;
 }
 .under-login-form a:visited {
@@ -50,7 +56,6 @@ body, html {
     margin:0 auto;
     width:70%;
     padding-bottom:5rem;
-    /*text-align:center;*/
 }
 .duo {
     margin: 1rem 0;
@@ -138,7 +143,6 @@ body, html {
     width: 25%;
     height:38px;
     display:inline-block;
-    /*background-color:white;*/
     line-height:45px;
     color:white;
     font-weight: bold;
@@ -220,6 +224,11 @@ body, html {
     margin:0 1rem;
 }
 @media (max-width:480px){
+    .navbar a {display:none;}
+    .navbar a.icon {
+        float:right;
+        display:block;
+    }
     .cards-container {
       display:flex;
       flex-direction:column;
@@ -230,4 +239,28 @@ body, html {
         position:relative;
         width:70vw;
     }
+    
   }
+
+@media screen and (max-width:480px) {
+    .navbar.responsive {
+        position: relative;
+        background-color: plum;
+    }
+    .navbar.responsive a.icon {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+    .navbar.responsive a {
+      float: none;
+      display: block;
+      text-align: left;
+    }
+    .navbar.responsive a:link {
+        color:cornsilk;
+    }
+    .navbar.responsive a:visited {
+        color:darkslateblue;
+    }
+}
